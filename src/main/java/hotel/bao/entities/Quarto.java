@@ -43,4 +43,12 @@ public class Quarto {
     public void setPreco(float preco) {
         this.preco = preco;
     }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
