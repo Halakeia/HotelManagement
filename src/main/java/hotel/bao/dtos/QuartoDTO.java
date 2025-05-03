@@ -1,5 +1,7 @@
 package hotel.bao.dtos;
 
+import hotel.bao.entities.Quarto;
+
 public class QuartoDTO {
     private int id;
     private String descricao;
@@ -14,6 +16,13 @@ public class QuartoDTO {
         this.descricao = descricao;
         this.preco = preco;
         this.imageUrl = imageUrl;
+    }
+
+    public QuartoDTO(Quarto entity) {
+        this.id = entity.getId();
+        this.descricao = entity.getDescricao();
+        this.preco = entity.getPreco();
+        this.imageUrl = entity.getImageUrl();
     }
 
     public int getId() {

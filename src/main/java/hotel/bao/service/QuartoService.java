@@ -6,14 +6,14 @@ import hotel.bao.dtos.QuartoDTO;
 import hotel.bao.service.exceptions.DatabaseException;
 import hotel.bao.service.exceptions.ResourceNotFound;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Pageable;
+
 
 @Service
 public class QuartoService {
@@ -23,19 +23,18 @@ public class QuartoService {
 
     // Método para salvar um novo quarto
     @Transactional
-    public Quarto save(QuartoDTO quartoDTO) {
+    public QuartoDTO save(QuartoDTO quartoDTO) {
        Quarto entity = new Quarto();
        copyDtoToEntity(quartoDTO, entity);
        entity = quartoRepository.save(entity);
-       return entity;
+       return new QuartoDTO(entity);
     }
 
     // Método para encontrar todos os quartos, retornando uma lista de DTOs
     @Transactional(readOnly = true)
-    public List<QuartoDTO> findAll() {
-        return quartoRepository.findAll().stream()
-                .map(quarto -> new QuartoDTO(quarto.getId(), quarto.getDescricao(), quarto.getPreco(), quarto.getImageUrl()))
-                .collect(Collectors.toList());
+    public Page<QuartoDTO> findAll(Pageable pageable) {
+       Page<Quarto> list = quartoRepository.findAll(pageable);
+       return list.map(QuartoDTO::new);
     }
 
     // Método para encontrar um quarto por ID, retornando um DTO
