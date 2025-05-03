@@ -14,10 +14,11 @@ public class Quarto {
     public Quarto() {
     }
 
-    public Quarto(int id, String descricao, float preco) {
+    public Quarto(int id, String descricao, float preco, String imageUrl) {
         this.id = id;
         this.descricao = descricao;
         this.preco = preco;
+        this.imageUrl = imageUrl;
     }
 
     public int getId() {
