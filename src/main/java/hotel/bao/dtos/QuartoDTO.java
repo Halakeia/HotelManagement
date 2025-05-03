@@ -9,10 +9,11 @@ public class QuartoDTO {
     public QuartoDTO() {
     }
 
-    public QuartoDTO(int id, String descricao, float preco) {
+    public QuartoDTO(int id, String descricao, float preco, String imageUrl) {
         this.id = id;
         this.descricao = descricao;
         this.preco = preco;
+        this.imageUrl = imageUrl;
     }
 
     public int getId() {
