@@ -2,7 +2,7 @@ package hotel.bao.dtos;
 
 public class QuartoDTO {
     private int id;
-    private  String descricao;
+    private String descricao;
     private float preco;
     private String imageUrl;
 
