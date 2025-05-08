@@ -1,10 +1,12 @@
 package hotel.bao.dtos;
 
 
+import hotel.bao.entities.Cliente;
+
 public class ClienteDTO {
 
 
-    private int id;
+    private long id;
 
     private String nome;
 
@@ -22,7 +24,7 @@ public class ClienteDTO {
     public ClienteDTO() {
     }
 
-    public ClienteDTO(int id, String nome, String email, String login, String senha, String celular) {
+    public ClienteDTO(long id, String nome, String email, String login, String senha, String celular) {
         this.id = id;
         this.nome = nome;
         this.email = email;
@@ -31,11 +33,20 @@ public class ClienteDTO {
         this.celular = celular;
     }
 
-    public int getId() {
+    public ClienteDTO(Cliente entity) {
+        this.id = entity.getId();
+        this.nome = entity.getNome();
+        this.email = entity.getEmail();
+        this.login = entity.getLogin();
+        this.senha = entity.getSenha();
+        this.celular = entity.getCelular();
+    }
+
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
