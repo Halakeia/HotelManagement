@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Quarto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private  String descricao;
     private float preco;
     private String imageUrl;
@@ -22,7 +22,7 @@ public class Quarto {
         this.imageUrl = imageUrl;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -3,7 +3,7 @@ package hotel.bao.dtos;
 import hotel.bao.entities.Quarto;
 
 public class QuartoDTO {
-    private int id;
+    private long id;
     private String descricao;
     private float preco;
     private String imageUrl;
@@ -11,7 +11,7 @@ public class QuartoDTO {
     public QuartoDTO() {
     }
 
-    public QuartoDTO(int id, String descricao, float preco, String imageUrl) {
+    public QuartoDTO(long id, String descricao, float preco, String imageUrl) {
         this.id = id;
         this.descricao = descricao;
         this.preco = preco;
@@ -25,7 +25,7 @@ public class QuartoDTO {
         this.imageUrl = entity.getImageUrl();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

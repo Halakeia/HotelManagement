@@ -42,7 +42,7 @@ public class QuartoService {
     public QuartoDTO findById(Long id) {
         Quarto quarto = quartoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("Quarto não foi encontrado " + id));
-        return new QuartoDTO(quarto.getId(), quarto.getDescricao(), quarto.getPreco(), quarto.getImageUrl());
+        return new QuartoDTO(quarto);
     }
 
 
@@ -54,7 +54,7 @@ public class QuartoService {
             copyDtoToEntity(dto, entity);
             entity = quartoRepository.save(entity);
 
-            return new QuartoDTO(entity.getId(), entity.getDescricao(), entity.getPreco(), entity.getImageUrl());
+            return new QuartoDTO(entity);
         }catch (EntityNotFoundException e){
             throw new ResourceNotFound("Quarto não foi encontrado "+id);
 
