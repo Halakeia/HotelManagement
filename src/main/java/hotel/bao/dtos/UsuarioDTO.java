@@ -1,47 +1,68 @@
 package hotel.bao.dtos;
+import hotel.bao.entities.Usuario;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
-import jakarta.persistence.*;
-
+import java.util.HashSet;
+import java.util.Set;
 
 public class UsuarioDTO {
 
-    private int id;
+    private Long id;
+    @NotBlank(message = "campo obrigatório")
+    private String firstName;
+    private String lastName;
 
-    private String nome;
-
-
+    @Email(message = "Favor informar um e-mail válido")
     private String email;
 
-
-    private String senha;
-
-    private boolean isAdmin;
+    private Set<RoleDTO> roles = new HashSet<>();
 
     public UsuarioDTO() {
+
     }
 
-    public UsuarioDTO(int id, String nome, String email, String senha, boolean isAdmin) {
+    public UsuarioDTO(Long id, String firstName, String lastName, String email) {
         this.id = id;
-        this.nome = nome;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.senha = senha;
-        this.isAdmin = isAdmin;
     }
 
-    public int getId() {
+    public UsuarioDTO(Usuario Usuario) {
+        id = Usuario.getId();
+        firstName = Usuario.getFirstName();
+        lastName = Usuario.getLastName();
+        email = Usuario.getEmail();
+
+        Usuario
+                .getRoles()
+                .forEach(role -> roles.add(new RoleDTO(role)) );
+
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -52,19 +73,25 @@ public class UsuarioDTO {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public Set<RoleDTO> getRoles() {
+        return roles;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setRoles(Set<RoleDTO> roles) {
+        this.roles = roles;
     }
 
-    public boolean getIsAdmin() {
-        return isAdmin;
-    }
-
-    public void setIsAdmin(boolean admin) {
-        this.isAdmin = admin;
+    @Override
+    public String toString() {
+        return "UsuarioDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
+
+
+

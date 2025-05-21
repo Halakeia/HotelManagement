@@ -3,7 +3,7 @@ package hotel.bao.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "tb_cliente")
 public class Cliente {
 
     @Id

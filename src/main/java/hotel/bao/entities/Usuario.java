@@ -1,50 +1,89 @@
 package hotel.bao.entities;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "tb_usuario")
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //usa auto increment para gerar a chave
-    private int id;
-
-    private String nome;
-
-    @Column(unique = true, nullable = false) //email único e não permite ser nulo
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String firstName;
+    private String lastName;
+    @Column(unique = true)
     private String email;
+    private String password;
 
-    @Column(nullable = false)
-    private String senha;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tb_usuario_role",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
 
-    private boolean isAdmin;
+    private Set<Role> roles = new HashSet<>();
+
 
     public Usuario() {
     }
 
-    public Usuario(int id, String nome, String email, String senha, boolean isAdmin) {
+    public Usuario(Long id, String firstName, String lastName, String email, String password) {
         this.id = id;
-        this.nome = nome;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
-        this.senha = senha;
-        this.isAdmin = isAdmin;
+        this.password = password;
     }
 
-    public int getId() {
+    public Usuario(Usuario entity){
+        this.id = entity.getId();
+        this.firstName = entity.getFirstName();
+        this.lastName = entity.getLastName();
+        this.email = entity.getEmail();
+        this.password = entity.getPassword();
+    }
+
+    public Usuario(Usuario entity, Set<Role> roles){
+        this(entity);
+        this.roles = roles;
+    }
+    public void addRole(Role role){
+        roles.add(role);
+    }
+
+    public boolean hasRole(String roleName){
+        return
+                !roles.stream().filter(r ->
+                        r.getAuthority().equals(roleName)
+                ).toList().isEmpty();
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -55,19 +94,36 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
+    public String getPassword() {
+        return password;
     }
 
-    public void setSenha(String senha) {
-        this.senha = senha;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public boolean getIsAdmin() {
-        return isAdmin;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setIsAdmin(boolean admin) {
-        this.isAdmin = admin;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Usuario user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
+
+
+
+
+
+

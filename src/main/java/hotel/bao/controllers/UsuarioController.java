@@ -1,0 +1,130 @@
+package hotel.bao.controllers;
+
+import hotel.bao.dtos.UsuarioDTO;
+import hotel.bao.dtos.UsuarioInsertDTO;
+import hotel.bao.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("/usuario")
+@Tag(name="usuario", description = "Controller/Resource for user")
+public class UsuarioController {
+
+    @Autowired
+    private UsuarioService userService;
+
+    @GetMapping(produces="application/json")
+    @Operation(
+            description = "Get all users",
+            summary = "Get all users",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200")
+            }
+    )
+
+    public ResponseEntity<Page<UsuarioDTO>> findAll(Pageable pageable) {
+        Page<UsuarioDTO> list = userService.findAll(pageable);
+        return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/{id}", produces="application/json")
+    @Operation(
+            description = "Get a user",
+            summary = "Get a user",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
+        UsuarioDTO dto = userService.findById(id);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping(produces="application/json")
+    @Operation(
+            description = "Create a new user",
+            summary = "Create a new user",
+            responses = {
+                    @ApiResponse(description = "created", responseCode = "201"),
+                    @ApiResponse(description = "Bad request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbbiden", responseCode = "403")
+            }
+    )
+    public ResponseEntity<UsuarioDTO>
+    insert(@Valid @RequestBody UsuarioInsertDTO dto) {
+        UsuarioDTO user = userService.insert(dto);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).body(user);
+    }
+
+    @PutMapping(value = "/{id}", produces="application/json")
+    @Operation(
+            description = "Update a user",
+            summary = "Update a user",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200"),
+                    @ApiResponse(description = "Bad request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbbiden", responseCode = "403"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    public ResponseEntity<UsuarioDTO> update(
+            @PathVariable Long id, @Valid @RequestBody UsuarioDTO dto) {
+        dto = userService.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Operation(
+            description = "Delete a user",
+            summary = "Delete a user",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200"),
+                    @ApiResponse(description = "Bad request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbbiden", responseCode = "403"),
+                    @ApiResponse(description = "Not found", responseCode = "404")
+            }
+    )
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
