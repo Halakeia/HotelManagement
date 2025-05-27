@@ -1,11 +1,17 @@
 package hotel.bao.dtos;
 
 import hotel.bao.entities.Quarto;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 
 public class QuartoDTO {
     private long id;
+    @NotBlank(message = "Descrição é obrigatória")
     private String descricao;
+
+    @Positive(message = "Preço deve ser maior que zero")
     private float preco;
+
     private String imageUrl;
 
     public QuartoDTO() {
@@ -29,7 +35,7 @@ public class QuartoDTO {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

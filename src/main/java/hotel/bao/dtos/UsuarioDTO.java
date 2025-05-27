@@ -2,11 +2,12 @@ package hotel.bao.dtos;
 import hotel.bao.entities.Usuario;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class UsuarioDTO {
+public class UsuarioDTO extends RepresentationModel {
 
     private Long id;
     @NotBlank(message = "campo obrigatório")

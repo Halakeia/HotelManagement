@@ -1,5 +1,6 @@
 package hotel.bao.controllers;
 
+import hotel.bao.assemblers.UsuarioAssembler;
 import hotel.bao.dtos.UsuarioDTO;
 import hotel.bao.dtos.UsuarioInsertDTO;
 import hotel.bao.service.UsuarioService;
@@ -10,6 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -23,20 +25,23 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService userService;
+    @Autowired
+    private UsuarioAssembler assembler;
 
-    @GetMapping(produces="application/json")
+
+    @GetMapping(produces = "application/json")
     @Operation(
             description = "Get all users",
             summary = "Get all users",
             responses = {
                     @ApiResponse(description = "ok", responseCode = "200")
-            }
-    )
-
-    public ResponseEntity<Page<UsuarioDTO>> findAll(Pageable pageable) {
-        Page<UsuarioDTO> list = userService.findAll(pageable);
-        return ResponseEntity.ok().body(list);
-    }
+        }
+)
+public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) {
+    Page<UsuarioDTO> list = userService.findAll(pageable);
+    Page<EntityModel<UsuarioDTO>> pagedModel = list.map(dto -> assembler.toModel(dto));
+    return ResponseEntity.ok().body(pagedModel);
+}
 
     @GetMapping(value = "/{id}", produces="application/json")
     @Operation(
@@ -47,34 +52,20 @@ public class UsuarioController {
                     @ApiResponse(description = "Not found", responseCode = "404")
             }
     )
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<UsuarioDTO>> findById(@PathVariable Long id) {
         UsuarioDTO dto = userService.findById(id);
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok(assembler.toModel(dto));
     }
 
-    @PostMapping(produces="application/json")
-    @Operation(
-            description = "Create a new user",
-            summary = "Create a new user",
-            responses = {
-                    @ApiResponse(description = "created", responseCode = "201"),
-                    @ApiResponse(description = "Bad request", responseCode = "400"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbbiden", responseCode = "403")
-            }
-    )
-    public ResponseEntity<UsuarioDTO>
-    insert(@Valid @RequestBody UsuarioInsertDTO dto) {
+
+    @PostMapping(produces = "application/json")
+    public ResponseEntity<EntityModel<UsuarioDTO>> insert(@Valid @RequestBody UsuarioInsertDTO dto) {
         UsuarioDTO user = userService.insert(dto);
-
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(user.getId())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(user);
-    }
+        EntityModel<UsuarioDTO> userModel = assembler.toModel(user);
+        return ResponseEntity
+            .created(userModel.getRequiredLink("self").toUri())
+            .body(userModel);
+}
 
     @PutMapping(value = "/{id}", produces="application/json")
     @Operation(
@@ -88,11 +79,13 @@ public class UsuarioController {
                     @ApiResponse(description = "Not found", responseCode = "404")
             }
     )
-    public ResponseEntity<UsuarioDTO> update(
-            @PathVariable Long id, @Valid @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<EntityModel<UsuarioDTO>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioDTO dto) {
         dto = userService.update(id, dto);
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok().body(assembler.toModel(dto));
     }
+
 
     @DeleteMapping(value = "/{id}")
     @Operation(
@@ -118,13 +111,3 @@ public class UsuarioController {
 
 
 }
-
-
-
-
-
-
-
-
-
-
