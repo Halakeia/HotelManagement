@@ -1,6 +1,7 @@
 package hotel.bao.entities;
 
 import jakarta.persistence.*;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,10 +13,10 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
     @Column(unique = true)
     private String email;
+    private String celular;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -31,31 +32,32 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Long id, String firstName, String lastName, String email, String password) {
+    public Usuario(Long id, String name, String celular, String email, String password) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
+        this.celular = celular;
         this.email = email;
         this.password = password;
     }
 
-    public Usuario(Usuario entity){
+    public Usuario(Usuario entity) {
         this.id = entity.getId();
-        this.firstName = entity.getFirstName();
-        this.lastName = entity.getLastName();
+        this.name = entity.getName();
+        this.celular = entity.getCelular();
         this.email = entity.getEmail();
         this.password = entity.getPassword();
     }
 
-    public Usuario(Usuario entity, Set<Role> roles){
+    public Usuario(Usuario entity, Set<Role> roles) {
         this(entity);
         this.roles = roles;
     }
-    public void addRole(Role role){
+
+    public void addRole(Role role) {
         roles.add(role);
     }
 
-    public boolean hasRole(String roleName){
+    public boolean hasRole(String roleName) {
         return
                 !roles.stream().filter(r ->
                         r.getAuthority().equals(roleName)
@@ -70,20 +72,20 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getCelular() {
+        return celular;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public String getEmail() {

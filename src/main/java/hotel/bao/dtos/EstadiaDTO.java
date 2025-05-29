@@ -1,8 +1,8 @@
 package hotel.bao.dtos;
 
-import hotel.bao.entities.Cliente;
 import hotel.bao.entities.Estadia;
 import hotel.bao.entities.Quarto;
+import hotel.bao.entities.Usuario;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class EstadiaDTO {
     private int id;
     @NotNull(message = "O cliente é obrigatório")
-    private Cliente cliente;
+    private Usuario cliente;
 
     @NotNull(message = "O quarto é obrigatório")
     private Quarto quarto;
@@ -24,7 +24,7 @@ public class EstadiaDTO {
     @FutureOrPresent(message = "A data de saída deve ser hoje ou uma data futura")
     private LocalDate dataSaida;
 
-    public EstadiaDTO(int id, Cliente cliente, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {
+    public EstadiaDTO(int id, Usuario cliente, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {
         this.id = id;
         this.cliente = cliente;
         this.quarto = quarto;
@@ -51,11 +51,11 @@ public class EstadiaDTO {
         this.id = id;
     }
 
-    public Cliente getCliente() {
+    public Usuario getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Usuario cliente) {
         this.cliente = cliente;
     }
 

@@ -11,13 +11,13 @@ public class Estadia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne //Posso ter uma estadia para vários clientes
-    private Cliente cliente;
+    private Usuario cliente;
     @ManyToOne
     private Quarto quarto;
     private LocalDate dataEntrada;
     private LocalDate dataSaida;
 
-    public Estadia(int id, Cliente cliente, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {
+    public Estadia(int id, Usuario cliente, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {
         this.id = id;
         this.cliente = cliente;
         this.quarto = quarto;
@@ -36,11 +36,11 @@ public class Estadia {
         this.id = id;
     }
 
-    public Cliente getCliente() {
+    public Usuario getCliente() {
         return cliente;
     }
 
-    public void setCliente(Cliente cliente) {
+    public void setCliente(Usuario cliente) {
         this.cliente = cliente;
     }
 

@@ -18,7 +18,7 @@ public class EstadiaService {
     @Autowired
     private EstadiaRepository estadiaRepository;
     @Autowired
-    private ClienteService clienteService;
+    private UsuarioService clienteService;
     @Autowired
     private QuartoService quartoService;
     private void validarCliente(long clienteId) {

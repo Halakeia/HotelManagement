@@ -4,8 +4,6 @@ package hotel.bao.service;
 import hotel.bao.dtos.RoleDTO;
 import hotel.bao.dtos.UsuarioDTO;
 import hotel.bao.entities.Role;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.context.annotation.Configuration;
 import hotel.bao.dtos.UsuarioInsertDTO;
 import hotel.bao.entities.Usuario;
@@ -70,8 +68,7 @@ public class UsuarioService {
 
     private void copyDtoToEntity(UsuarioDTO dto, Usuario entity) {
 
-        entity.setFirstName(dto.getFirstName());
-        entity.setLastName(dto.getLastName());
+        entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
 
         entity.getRoles().clear();

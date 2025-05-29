@@ -11,11 +11,12 @@ public class UsuarioDTO extends RepresentationModel {
 
     private Long id;
     @NotBlank(message = "campo obrigatório")
-    private String firstName;
-    private String lastName;
-
+    private String name;
     @Email(message = "Favor informar um e-mail válido")
     private String email;
+    private String celular;
+
+
 
     private Set<RoleDTO> roles = new HashSet<>();
 
@@ -23,23 +24,30 @@ public class UsuarioDTO extends RepresentationModel {
 
     }
 
-    public UsuarioDTO(Long id, String firstName, String lastName, String email) {
+    public UsuarioDTO(Long id, String name, String lastName, String email, String celular) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.email = email;
+        this.celular = celular;
     }
 
     public UsuarioDTO(Usuario Usuario) {
         id = Usuario.getId();
-        firstName = Usuario.getFirstName();
-        lastName = Usuario.getLastName();
+        name = Usuario.getName();
         email = Usuario.getEmail();
+        celular = Usuario.getCelular();
 
         Usuario
                 .getRoles()
                 .forEach(role -> roles.add(new RoleDTO(role)) );
 
+    }
+    public String getCelular(){
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
     }
 
     public Long getId() {
@@ -50,20 +58,12 @@ public class UsuarioDTO extends RepresentationModel {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -86,9 +86,9 @@ public class UsuarioDTO extends RepresentationModel {
     public String toString() {
         return "UsuarioDTO{" +
                 "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
+                ", celular='" + celular + '\'' +
                 ", roles=" + roles +
                 '}';
     }
