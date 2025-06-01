@@ -1,4 +1,4 @@
-package hotel.bao.controllers;
+package hotel.bao.controller;
 
 import hotel.bao.assemblers.UsuarioAssembler;
 import hotel.bao.dtos.UsuarioDTO;
@@ -14,9 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/usuario")

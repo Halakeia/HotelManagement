@@ -1,4 +1,4 @@
-package hotel.bao.controllers;
+package hotel.bao.controller;
 
 import hotel.bao.assemblers.QuartoAssembler;
 import hotel.bao.dtos.QuartoDTO;
@@ -11,11 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.data.domain.Pageable;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/quarto")

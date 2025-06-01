@@ -1,14 +1,14 @@
 
-INSERT INTO tb_usuario (name, email, celular, password) VALUES
-                                                             ('Ana Silva', 'ana.silva@email.com', '11999999999', 'senhaAna'),
-                                                             ('Bruno Souza', 'bruno.souza@email.com', '21988888888', 'senhaBruno'),
-                                                             ('Carla Mendes', 'carla.mendes@email.com', '31977777777', 'senhaCarla'),
-                                                             ('Diego Lima', 'diego.lima@email.com', '41966666666', 'senhaDiego'),
-                                                             ('Eduarda Reis', 'eduarda.reis@email.com', '51955555555', 'senhaEdu');
+INSERT INTO tb_usuario (name, email,login, celular, password) VALUES
+                                                             ('Ana Silva', 'ana.silva@email.com', 'ana', '11999999999', 'senhaAna'),
+                                                             ('Bruno Souza', 'bruno.souza@email.com','bruno.souza@email.com', '21988888888', 'senhaBruno'),
+                                                             ('Carla Mendes', 'carla.mendes@email.com','carla.mendes@email.com', '31977777777', 'senhaCarla'),
+                                                             ('Diego Lima', 'diego.lima@email.com','diego.lima@email.com', '41966666666', 'senhaDiego'),
+                                                             ('Eduarda Reis', 'eduarda.reis@email.com','eduarda.reis@email.com', '51955555555', 'senhaEdu');
 
-INSERT INTO tb_role (authority) VALUES ('ADMIN');
-INSERT INTO tb_role (authority) VALUES ('AUTENTICADO');
-INSERT INTO tb_role (authority) VALUES ('NAO_AUTENTICADO');
+INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
+INSERT INTO tb_role (authority) VALUES ('ROLE_CLIENT');
+INSERT INTO tb_role (authority) VALUES ('ROLE_NAO_AUTENTICADO');
 INSERT INTO tb_usuario_role (usuario_id, role_id) VALUES (1, 1),
                                                         (2, 1),
                                                         (2, 2),

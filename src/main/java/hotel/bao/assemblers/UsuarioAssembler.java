@@ -1,6 +1,6 @@
 package hotel.bao.assemblers;
 
-import hotel.bao.controllers.UsuarioController;
+import hotel.bao.controller.UsuarioController;
 import hotel.bao.dtos.UsuarioDTO;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;

@@ -1,4 +1,4 @@
-package hotel.bao.controllers.exception;
+package hotel.bao.controller.exception;
 
 import java.time.Instant;
 

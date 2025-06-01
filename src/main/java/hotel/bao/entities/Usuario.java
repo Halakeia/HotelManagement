@@ -1,14 +1,16 @@
 package hotel.bao.entities;
 
+import hotel.bao.security.RoleEnum;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "tb_usuario")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +18,10 @@ public class Usuario {
     private String name;
     @Column(unique = true)
     private String email;
+
+    @Column(unique = true)
+    private String login;
+
     private String celular;
     private String password;
 
@@ -32,11 +38,12 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(Long id, String name, String celular, String email, String password) {
+    public Usuario(Long id, String name, String celular, String email, String login, String password) {
         this.id = id;
         this.name = name;
         this.celular = celular;
         this.email = email;
+        this.login = login;
         this.password = password;
     }
 
@@ -45,6 +52,7 @@ public class Usuario {
         this.name = entity.getName();
         this.celular = entity.getCelular();
         this.email = entity.getEmail();
+        this.login = entity.getLogin();
         this.password = entity.getPassword();
     }
 
@@ -52,6 +60,13 @@ public class Usuario {
         this(entity);
         this.roles = roles;
     }
+
+    public Usuario(String login, String password, Set<Role> roles) {
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+    }
+
 
     public void addRole(Role role) {
         roles.add(role);
@@ -96,8 +111,28 @@ public class Usuario {
         this.email = email;
     }
 
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getAuthority()))
+                .toList();
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return login;
     }
 
     public void setPassword(String password) {
@@ -123,9 +158,3 @@ public class Usuario {
         return Objects.hashCode(id);
     }
 }
-
-
-
-
-
-

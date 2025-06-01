@@ -1,4 +1,4 @@
-package hotel.bao.controllers;
+package hotel.bao.controller;
 
 import jakarta.validation.Valid;
 import hotel.bao.dtos.EstadiaDTO;

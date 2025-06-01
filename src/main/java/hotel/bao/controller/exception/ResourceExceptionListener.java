@@ -1,4 +1,4 @@
-package hotel.bao.controllers.exception;
+package hotel.bao.controller.exception;
 
 
 import hotel.bao.service.exceptions.*;
