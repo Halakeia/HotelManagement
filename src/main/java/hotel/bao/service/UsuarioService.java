@@ -67,19 +67,16 @@ public class UsuarioService {
 
 
     private void copyDtoToEntity(UsuarioDTO dto, Usuario entity) {
-
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
+        entity.setLogin(dto.getLogin());
+        entity.setCelular(dto.getCelular());
 
         entity.getRoles().clear();
         for (RoleDTO role : dto.getRoles()) {
-            Role r =
-                    roleRepository.getReferenceById(role.getId());
+            Role r = roleRepository.getReferenceById(role.getId());
             entity.getRoles().add(r);
-
         }
-
-
     }
 
     @Transactional

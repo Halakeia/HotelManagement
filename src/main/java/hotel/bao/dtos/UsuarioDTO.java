@@ -14,6 +14,8 @@ public class UsuarioDTO extends RepresentationModel {
     private String name;
     @Email(message = "Favor informar um e-mail válido")
     private String email;
+    @NotBlank(message = "campo obrigatório")
+    private String login;
     private String celular;
 
 
@@ -24,11 +26,12 @@ public class UsuarioDTO extends RepresentationModel {
 
     }
 
-    public UsuarioDTO(Long id, String name, String lastName, String email, String celular) {
+    public UsuarioDTO(Long id, String name, String lastName, String email, String celular, String Login) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.celular = celular;
+        this.login= login;
     }
 
     public UsuarioDTO(Usuario Usuario) {
@@ -36,6 +39,7 @@ public class UsuarioDTO extends RepresentationModel {
         name = Usuario.getName();
         email = Usuario.getEmail();
         celular = Usuario.getCelular();
+        login = Usuario.getLogin();
 
         Usuario
                 .getRoles()
@@ -80,6 +84,14 @@ public class UsuarioDTO extends RepresentationModel {
 
     public void setRoles(Set<RoleDTO> roles) {
         this.roles = roles;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     @Override
