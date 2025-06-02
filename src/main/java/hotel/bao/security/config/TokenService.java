@@ -19,7 +19,7 @@ public class TokenService {
 
     public String generateToken(Usuario usuario) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(usuario.getPassword());
+            Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                     .withIssuer("API Hotel Bao")
                     .withSubject(usuario.getLogin())
