@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class EstadiaService {
     @Autowired
@@ -21,6 +24,21 @@ public class EstadiaService {
     private UsuarioService clienteService;
     @Autowired
     private QuartoService quartoService;
+
+    @Transactional(readOnly = true)
+    public List<EstadiaDTO> findByClienteId(Long clienteId) {
+        if (clienteId == null) {
+            throw new IllegalArgumentException("ID do cliente não pode ser nulo");
+        }
+
+        validarCliente(clienteId);
+
+        return estadiaRepository.findByClienteId(clienteId)
+                .stream()
+                .map(EstadiaDTO::new)
+                .toList();
+    }
+
     private void validarCliente(long clienteId) {
         try {
             clienteService.findById(clienteId);
@@ -71,6 +89,10 @@ public class EstadiaService {
         // Validações
         validarCliente(estadiaDTO.getCliente().getId());
         validarQuarto(estadiaDTO.getQuarto().getId());
+
+        // Define data de saída como um dia após a entrada
+        estadiaDTO.setDataSaida(estadiaDTO.getDataEntrada().plusDays(1));
+
         validarDatas(estadiaDTO);
         validarDisponibilidadeQuarto(estadiaDTO);
 

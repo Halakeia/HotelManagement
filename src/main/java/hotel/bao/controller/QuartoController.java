@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ public class QuartoController {
                     @ApiResponse(description = "Bad request", responseCode = "400")
             }
     )
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EntityModel<QuartoDTO>> save(@RequestBody QuartoDTO dto) {
         dto = quartoService.save(dto);
         EntityModel<QuartoDTO> quartoModel = assembler.toModel(dto);

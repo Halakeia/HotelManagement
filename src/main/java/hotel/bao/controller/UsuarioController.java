@@ -13,7 +13,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,9 +25,9 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService userService;
+
     @Autowired
     private UsuarioAssembler assembler;
-
 
     @GetMapping(produces = "application/json")
     @Operation(
@@ -33,13 +35,13 @@ public class UsuarioController {
             summary = "Get all users",
             responses = {
                     @ApiResponse(description = "ok", responseCode = "200")
-        }
-)
-public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) {
-    Page<UsuarioDTO> list = userService.findAll(pageable);
-    Page<EntityModel<UsuarioDTO>> pagedModel = list.map(dto -> assembler.toModel(dto));
-    return ResponseEntity.ok().body(pagedModel);
-}
+            }
+    )
+    public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) {
+        Page<UsuarioDTO> list = userService.findAll(pageable);
+        Page<EntityModel<UsuarioDTO>> pagedModel = list.map(dto -> assembler.toModel(dto));
+        return ResponseEntity.ok().body(pagedModel);
+    }
 
     @GetMapping(value = "/{id}", produces="application/json")
     @Operation(
@@ -55,15 +57,24 @@ public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) 
         return ResponseEntity.ok(assembler.toModel(dto));
     }
 
-
     @PostMapping(produces = "application/json")
+    @Operation(
+            description = "Create a new user",
+            summary = "Create a new user",
+            responses = {
+                    @ApiResponse(description = "Created", responseCode = "201"),
+                    @ApiResponse(description = "Bad request", responseCode = "400"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403")
+            }
+    )
     public ResponseEntity<EntityModel<UsuarioDTO>> insert(@Valid @RequestBody UsuarioInsertDTO dto) {
         UsuarioDTO user = userService.insert(dto);
         EntityModel<UsuarioDTO> userModel = assembler.toModel(user);
         return ResponseEntity
-            .created(userModel.getRequiredLink("self").toUri())
-            .body(userModel);
-}
+                .created(userModel.getRequiredLink("self").toUri())
+                .body(userModel);
+    }
 
     @PutMapping(value = "/{id}", produces="application/json")
     @Operation(
@@ -73,7 +84,7 @@ public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) 
                     @ApiResponse(description = "ok", responseCode = "200"),
                     @ApiResponse(description = "Bad request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbbiden", responseCode = "403"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
             }
     )
@@ -84,7 +95,6 @@ public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) 
         return ResponseEntity.ok().body(assembler.toModel(dto));
     }
 
-
     @DeleteMapping(value = "/{id}")
     @Operation(
             description = "Delete a user",
@@ -93,19 +103,13 @@ public ResponseEntity<Page<EntityModel<UsuarioDTO>>> findAll(Pageable pageable) 
                     @ApiResponse(description = "ok", responseCode = "200"),
                     @ApiResponse(description = "Bad request", responseCode = "400"),
                     @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Forbbiden", responseCode = "403"),
+                    @ApiResponse(description = "Forbidden", responseCode = "403"),
                     @ApiResponse(description = "Not found", responseCode = "404")
             }
     )
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
-
 }

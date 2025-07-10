@@ -4,6 +4,7 @@ package hotel.bao.service;
 import hotel.bao.dtos.RoleDTO;
 import hotel.bao.dtos.UsuarioDTO;
 import hotel.bao.entities.Role;
+import hotel.bao.service.exceptions.UnauthorizedRoleAssignmentException;
 import org.springframework.context.annotation.Configuration;
 import hotel.bao.dtos.UsuarioInsertDTO;
 import hotel.bao.entities.Usuario;
@@ -21,6 +22,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Collection;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @Service
 @Configuration
@@ -54,15 +63,30 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO insert(UsuarioInsertDTO dto) {
-
-        Usuario entity = new Usuario();
-        copyDtoToEntity(dto,entity);
-        entity.setPassword(
-                passwordEncoder.encode(dto.getPassword()));
-        Usuario novo = repository.save(entity);
-        return new UsuarioDTO(novo);
-
+    // Obtém o usuário autenticado atual
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+    
+    // Verifica se o usuário atual tem role CLIENT
+    boolean isClient = authorities.stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));
+    
+    if (isClient) {
+        // Se for CLIENT, verifica se está tentando criar usuário com role diferente de NAO_AUTENTICADO
+        boolean hasInvalidRole = dto.getRoles().stream()
+                .anyMatch(role -> !role.getAuthority().equals("ROLE_NAO_AUTENTICADO"));
+        
+        if (hasInvalidRole) {
+            throw new UnauthorizedRoleAssignmentException("Usuários com role CLIENT só podem criar usuários com role NAO_AUTENTICADO");
+        }
     }
+
+    Usuario entity = new Usuario();
+    copyDtoToEntity(dto, entity);
+    entity.setPassword(passwordEncoder.encode(dto.getPassword()));
+    Usuario novo = repository.save(entity);
+    return new UsuarioDTO(novo);
+}
 
 
 
@@ -84,6 +108,7 @@ public class UsuarioService {
 
         try {
             Usuario entity = repository.getReferenceById(id);
+
             copyDtoToEntity(dto, entity);
             entity = repository.save(entity);
             return new UsuarioDTO(entity);
@@ -111,7 +136,3 @@ public class UsuarioService {
 
 
 }
-
-
-
-

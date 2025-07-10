@@ -17,6 +17,16 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
+    public static String getRole(String currentToken) {
+        try {
+            return JWT.decode(currentToken)
+                    .getClaim("role")
+                    .asString();
+        } catch (JWTVerificationException exception) {
+            throw new RuntimeException("Error extracting role from token", exception);
+        }
+    }
+
     public String generateToken(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);

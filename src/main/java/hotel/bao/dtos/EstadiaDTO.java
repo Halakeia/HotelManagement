@@ -20,8 +20,6 @@ public class EstadiaDTO {
     @FutureOrPresent(message = "A data de entrada deve ser hoje ou uma data futura")
     private LocalDate dataEntrada;
 
-    @NotNull(message = "A data de saída é obrigatória")
-    @FutureOrPresent(message = "A data de saída deve ser hoje ou uma data futura")
     private LocalDate dataSaida;
 
     public EstadiaDTO(int id, Usuario cliente, Quarto quarto, LocalDate dataEntrada, LocalDate dataSaida) {

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface EstadiaRepository extends JpaRepository<Estadia, Long> {
@@ -24,17 +25,18 @@ public interface EstadiaRepository extends JpaRepository<Estadia, Long> {
             LocalDate dataEntrada,
             LocalDate dataSaida
     );
+
     @Query("""
-        SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END
-        FROM Estadia e
-        WHERE e.quarto.id = :quartoId
-        AND e.id != :estadiaId
-        AND (
-            (:dataEntrada BETWEEN e.dataEntrada AND e.dataSaida)
-            OR (:dataSaida BETWEEN e.dataEntrada AND e.dataSaida)
-            OR (e.dataEntrada BETWEEN :dataEntrada AND :dataSaida)
-        )
-        """)
+            SELECT CASE WHEN COUNT(e) > 0 THEN true ELSE false END
+            FROM Estadia e
+            WHERE e.quarto.id = :quartoId
+            AND e.id != :estadiaId
+            AND (
+                (:dataEntrada BETWEEN e.dataEntrada AND e.dataSaida)
+                OR (:dataSaida BETWEEN e.dataEntrada AND e.dataSaida)
+                OR (e.dataEntrada BETWEEN :dataEntrada AND :dataSaida)
+            )
+            """)
     boolean existsByQuartoIdAndPeriodoSobreposicaoExcluindoEstadia(
             Long quartoId,
             LocalDate dataEntrada,
@@ -42,4 +44,6 @@ public interface EstadiaRepository extends JpaRepository<Estadia, Long> {
             Long estadiaId
     );
 
+    @Query("SELECT e FROM Estadia e WHERE e.cliente.id = :clienteId")
+    List<Estadia> findByClienteId(Long clienteId);
 }
