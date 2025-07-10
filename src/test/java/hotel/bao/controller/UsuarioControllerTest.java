@@ -38,7 +38,6 @@ class UsuarioControllerTest {
     @WithMockUser(roles = {"ADMIN", "CLIENT"})
     void testFindAll() throws Exception {
         var userDto = new UsuarioDTO();
-        // configure userDto fields se precisar
 
         Mockito.when(userService.findAll(any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(userDto)));
@@ -54,14 +53,13 @@ class UsuarioControllerTest {
     @WithMockUser(roles = {"ADMIN", "CLIENT"})
     void testFindById() throws Exception {
         var userDto = new UsuarioDTO();
-        // configure userDto fields se precisar
 
         Mockito.when(userService.findById(1L)).thenReturn(userDto);
 
         mockMvc.perform(get("/usuario/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").exists()); // ou outro campo do DTO
+                .andExpect(jsonPath("$.id").exists());
     }
 
     @Test
@@ -77,7 +75,6 @@ class UsuarioControllerTest {
             """;
 
         var userDto = new UsuarioDTO();
-        // configure userDto se quiser
 
         Mockito.when(userService.insert(any())).thenReturn(userDto);
 
