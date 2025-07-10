@@ -27,6 +27,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Collection;
+import java.util.Set;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +42,9 @@ public class UsuarioService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private AuthorizationService authService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -63,32 +68,34 @@ public class UsuarioService {
 
     @Transactional
     public UsuarioDTO insert(UsuarioInsertDTO dto) {
-    // Obtém o usuário autenticado atual
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-    
-    // Verifica se o usuário atual tem role CLIENT
-    boolean isClient = authorities.stream()
-            .anyMatch(a -> a.getAuthority().equals("ROLE_CLIENT"));
-    
-    if (isClient) {
-        // Se for CLIENT, verifica se está tentando criar usuário com role diferente de NAO_AUTENTICADO
-        boolean hasInvalidRole = dto.getRoles().stream()
-                .anyMatch(role -> !role.getAuthority().equals("ROLE_NAO_AUTENTICADO"));
-        
-        if (hasInvalidRole) {
-            throw new UnauthorizedRoleAssignmentException("Usuários com role CLIENT só podem criar usuários com role NAO_AUTENTICADO");
+        Usuario entity = new Usuario();
+        copyDtoToEntity(dto, entity);
+
+        // Verifica se é um admin fazendo o cadastro
+        boolean isAdmin = authService.isAuthenticated() &&
+                authService.getAuthenticatedUser().hasRole("ROLE_ADMIN");
+
+        // Define a senha baseada na regra de negócio
+        if (isAdmin && (dto.getPassword() == null || dto.getPassword().trim().isEmpty())) {
+            // Validação do celular
+            if (dto.getCelular() == null || dto.getCelular().trim().isEmpty()) {
+                throw new UnauthorizedRoleAssignmentException("Para cadastro por administrador, o celular é obrigatório quando a senha não é fornecida");
+            }
+
+            String celularSemFormatacao = dto.getCelular().replaceAll("[^0-9]", "");
+            entity.setPassword(passwordEncoder.encode(celularSemFormatacao));
+        } else if (dto.getPassword() == null || dto.getPassword().trim().isEmpty()) {
+            throw new UnauthorizedRoleAssignmentException("A senha é obrigatória para cadastro");
+        } else {
+            //NÃO É ADMIN
+            Set<Role> roles = Set.of(new Role(3L, "ROLE_NAO_AUTENTICADO"));
+            entity.setRoles(roles);
+
         }
+
+        entity = repository.save(entity);
+        return new UsuarioDTO(entity);
     }
-
-    Usuario entity = new Usuario();
-    copyDtoToEntity(dto, entity);
-    entity.setPassword(passwordEncoder.encode(dto.getPassword()));
-    Usuario novo = repository.save(entity);
-    return new UsuarioDTO(novo);
-}
-
-
 
     private void copyDtoToEntity(UsuarioDTO dto, Usuario entity) {
         entity.setName(dto.getName());

@@ -10,12 +10,13 @@ import java.util.Set;
 public class UsuarioDTO extends RepresentationModel {
 
     private Long id;
-    @NotBlank(message = "campo obrigatório")
+    @NotBlank(message = "campo nome obrigatório")
     private String name;
     @Email(message = "Favor informar um e-mail válido")
     private String email;
-    @NotBlank(message = "campo obrigatório")
+    @NotBlank(message = "campo login obrigatório")
     private String login;
+    @NotBlank(message = "campo celular obrigatório")
     private String celular;
 
 

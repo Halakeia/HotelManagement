@@ -1,6 +1,6 @@
 package hotel.bao.entities;
 
-import hotel.bao.security.RoleEnum;
+
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

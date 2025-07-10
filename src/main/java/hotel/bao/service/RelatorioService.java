@@ -4,7 +4,6 @@ import hotel.bao.dtos.EstadiaDTO;
 import hotel.bao.dtos.UsuarioDTO;
 import hotel.bao.entities.*;
 import hotel.bao.service.exceptions.NotaFiscalException;
-import hotel.bao.service.exceptions.ResourceNotFound;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +13,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
-public class NotaFiscalService {
+public class RelatorioService {
     
     @Autowired
     private EstadiaService estadiaService;
@@ -191,6 +189,42 @@ public class NotaFiscalService {
         }
 
         EstadiaDTO estadia = estadias.stream()
+                .max((e1, e2) -> Float.compare(
+                        e1.getQuarto().getPreco(), 
+                        e2.getQuarto().getPreco()))
+                .orElseThrow(() -> new NotaFiscalException("Erro ao encontrar estadia de maior valor"));
+
+        return String.format("Estadia maior valor: %s Valor diária: R$ %.2f",
+                estadia.getQuarto().getDescricao(),
+                estadia.getQuarto().getPreco());
+    }
+
+    @Transactional(readOnly = true)
+    public String buscarEstadiaMenorValor(Long clienteId) {
+        List<EstadiaDTO> estadias = estadiaService.findByClienteId(clienteId);
+        if (estadias.isEmpty()) {
+            throw new NotaFiscalException("Não há estadias registradas para este cliente");
+        }
+
+        EstadiaDTO estadia = estadias.stream()
+                .min((e1, e2) -> Float.compare(
+                        e1.getQuarto().getPreco(), 
+                        e2.getQuarto().getPreco()))
+                .orElseThrow(() -> new NotaFiscalException("Erro ao encontrar estadia de menor valor"));
+
+        return String.format("Estadia menor valor: %s Valor diária: R$ %.2f",
+                estadia.getQuarto().getDescricao(),
+                estadia.getQuarto().getPreco());
+    }
+
+    @Transactional(readOnly = true)
+    public String buscarAluguelMaiorValor(Long clienteId) {
+        List<EstadiaDTO> estadias = estadiaService.findByClienteId(clienteId);
+        if (estadias.isEmpty()) {
+            throw new NotaFiscalException("Não há estadias registradas para este cliente");
+        }
+
+        EstadiaDTO estadia = estadias.stream()
                 .max((e1, e2) -> {
                     double valor1 = calcularValorTotal(convertDtoToEntity(e1));
                     double valor2 = calcularValorTotal(convertDtoToEntity(e2));
@@ -202,25 +236,4 @@ public class NotaFiscalService {
                 estadia.getQuarto().getDescricao(),
                 calcularValorTotal(convertDtoToEntity(estadia)));
     }
-
-    @Transactional(readOnly = true)
-    public String buscarEstadiaMenorValor(Long clienteId) {
-        List<EstadiaDTO> estadias = estadiaService.findByClienteId(clienteId);
-        if (estadias.isEmpty()) {
-            throw new NotaFiscalException("Não há estadias registradas para este cliente");
-        }
-
-        EstadiaDTO estadia = estadias.stream()
-                .min((e1, e2) -> {
-                    double valor1 = calcularValorTotal(convertDtoToEntity(e1));
-                    double valor2 = calcularValorTotal(convertDtoToEntity(e2));
-                    return Double.compare(valor1, valor2);
-                })
-                .orElseThrow(() -> new NotaFiscalException("Erro ao calcular estadia de menor valor"));
-
-        return String.format("Estadia menor valor: %s Valor: R$ %.2f",
-                estadia.getQuarto().getDescricao(),
-                calcularValorTotal(convertDtoToEntity(estadia)));
-    }
-
 }

@@ -60,13 +60,17 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.DELETE, "/estadia/**").hasAnyRole("CLIENT", "ADMIN")
 
                                 //rotas nota fiscal
-                                .requestMatchers(HttpMethod.GET, "/nota-fiscal/cliente/**").hasAnyRole("ADMIN", "CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/nota-fiscal/cliente/menor-valor/**").hasAnyRole("ADMIN", "CLIENT")
-                                .requestMatchers(HttpMethod.GET, "/nota-fiscal/cliente/maior-valor/**").hasAnyRole("ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/relatorio/cliente/**").hasAnyRole("ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/relatorio/cliente/menor-valor/**").hasAnyRole("ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/relatorio/cliente/maior-valor/**").hasAnyRole("ADMIN", "CLIENT")
+                                .requestMatchers(HttpMethod.GET, "/relatorio/cliente/maior-aluguel/**").hasAnyRole("ADMIN", "CLIENT")
 
 
-                        // Swagger e documentação
+                                // Swagger e documentação
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                //banco de dados
+                                .requestMatchers("/admin/database/cleanup").hasRole("ADMIN")
+
 
                                 // Qualquer outra rota requer autenticação
                                 .anyRequest().authenticated()

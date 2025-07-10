@@ -1,8 +1,8 @@
 
 INSERT INTO tb_usuario (name, email, login, celular, password) VALUES
                                                                    ('Ana Silva', 'ana.silva@email.com', 'ana', '11999999999', '$2a$10$U7DNf.7ZvSN9t0dsqdXrTuQG3UYZgWvXLDYoquUTglZWJevHqbgYu'),
-                                                                   ('Bruno Souza', 'bruno.souza@email.com', 'bruno.souza@email.com', '21988888888', '$2a$10$SDLRlml4y1pra9dhc3DPxept/YNHfYXcoI/rbsiE6tL0Hr/cjc5aK'),
-                                                                   ('Carla Mendes', 'carla.mendes@email.com', 'carla.mendes@email.com', '31977777777', '$2a$10$eOhXZixEamq8oZeOGaNX9O0Eocz2k/qyrJmRVZLN6q.DYFQO32qbu');
+                                                                   ('Bruno Souza', 'bruno', 'bruno.souza@email.com', '21988888888', '$2a$10$SDLRlml4y1pra9dhc3DPxept/YNHfYXcoI/rbsiE6tL0Hr/cjc5aK'),
+                                                                   ('Carla Mendes', 'carla', 'carla.mendes@email.com', '31977777777', '$2a$10$eOhXZixEamq8oZeOGaNX9O0Eocz2k/qyrJmRVZLN6q.DYFQO32qbu');
 
 
 INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');

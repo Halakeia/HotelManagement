@@ -41,7 +41,7 @@ public class EstadiaDTO {
         this.dataSaida = entity.getDataSaida();
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

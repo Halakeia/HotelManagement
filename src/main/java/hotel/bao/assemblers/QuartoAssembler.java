@@ -37,12 +37,6 @@ public class QuartoAssembler extends GenericAssembler<QuartoDTO> {
                                 .delete(quarto.getId()))
                 .withRel("deletar"));
 
-//        // Link específico para estadias relacionadas a este quarto
-//        quartoModel.add(WebMvcLinkBuilder.linkTo(
-//            WebMvcLinkBuilder.methodOn(QuartoController.class)
-//                .findEstadias(quarto.getId()))
-//                .withRel("estadias"));
-
         return quartoModel;
     }
 }
